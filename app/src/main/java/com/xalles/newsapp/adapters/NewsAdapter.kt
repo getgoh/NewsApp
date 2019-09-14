@@ -24,6 +24,17 @@ class NewsAdapter(private val articles: ArrayList<Article>) : RecyclerView.Adapt
         val itemArticle = articles[position]
         holder.bindArticle(itemArticle)
     }
+
+    fun clear() {
+        articles.clear()
+        notifyDataSetChanged()
+    }
+
+    fun addAll(_articles: ArrayList<Article>) {
+        articles.addAll(_articles)
+        notifyDataSetChanged()
+    }
+
 }
 
 class ArticleHolder(v: View) : RecyclerView.ViewHolder(v), View.OnClickListener {
