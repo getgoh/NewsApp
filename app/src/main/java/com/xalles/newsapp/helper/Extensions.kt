@@ -1,4 +1,4 @@
-package com.xalles.newsapp
+package com.xalles.newsapp.helper
 
 import android.view.LayoutInflater
 import android.view.View

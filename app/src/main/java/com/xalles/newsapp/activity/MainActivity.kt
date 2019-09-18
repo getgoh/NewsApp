@@ -1,4 +1,4 @@
-package com.xalles.newsapp
+package com.xalles.newsapp.activity
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -7,18 +7,18 @@ import java.net.URL
 import com.google.gson.Gson
 import com.xalles.newsap.models.ApiResponse
 import com.xalles.newsap.models.Article
-import com.xalles.newsapp.adapters.NewsAdapter
+import com.xalles.newsapp.R
+import com.xalles.newsapp.adapter.NewsAdapter
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
 
 
 // This activity will show the main list
 
 class MainActivity : AppCompatActivity() {
 
-    private val apiKey = ""
+    private val apiKey = "cc1d2784c45a4db7b172c39e08b8ed40"
 
     private lateinit var adapter: NewsAdapter
     private lateinit var linearLayoutManager: LinearLayoutManager

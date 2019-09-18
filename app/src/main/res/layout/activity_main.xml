@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:paddingTop="50dp"
     android:background="#123456"
-    tools:context=".MainActivity">
+    tools:context=".activity.MainActivity">
 
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/swipeContainer"
