@@ -1,8 +1,14 @@
 package com.xalles.newsapp.adapter
 
 import android.animation.ValueAnimator
+import android.app.Activity
+import android.content.Context
+import android.content.Intent
+import android.os.Build
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.app.ActivityCompat
+import androidx.core.app.ActivityOptionsCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.util.ViewPreloadSizeProvider
@@ -11,10 +17,14 @@ import com.xalles.newsapp.R
 import com.xalles.newsapp.helper.inflate
 import kotlinx.android.synthetic.main.news_list_item.view.*
 
-class NewsAdapter(private val articles: ArrayList<Article>) : RecyclerView.Adapter<ArticleHolder>() {
+import androidx.core.util.*
+import androidx.core.view.ViewCompat
+import com.xalles.newsapp.activity.DetailsActivity
+
+class NewsAdapter(private val articles: ArrayList<Article>, private val context: Context) : RecyclerView.Adapter<ArticleHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ArticleHolder {
         val inflatedView = parent.inflate(R.layout.news_list_item, false)
-        return ArticleHolder(inflatedView)
+        return ArticleHolder(inflatedView, context)
     }
 
     override fun getItemCount() = articles.size
@@ -36,11 +46,12 @@ class NewsAdapter(private val articles: ArrayList<Article>) : RecyclerView.Adapt
 
 }
 
-class ArticleHolder(v: View) : RecyclerView.ViewHolder(v), View.OnClickListener {
+class ArticleHolder(v: View, c: Context) : RecyclerView.ViewHolder(v), View.OnClickListener {
 
     private var view: View = v
     private var _article: Article? = null
     private var sizeProvider = ViewPreloadSizeProvider<String>()
+    private var context: Context = c
 
     private var clicked = false
 
@@ -66,34 +77,49 @@ class ArticleHolder(v: View) : RecyclerView.ViewHolder(v), View.OnClickListener 
             .fitCenter()
             .into(view.news_item_img)
 
+        ViewCompat.setTransitionName(view.news_item_img, "ASDFG")
+
     }
 
     override fun onClick(v: View) {
 
-        clicked = !clicked
+        val i = Intent(context, DetailsActivity::class.java)
+        i.putExtra("article", _article)
+        i.putExtra("transitionName", ViewCompat.getTransitionName(v.news_item_img))
 
-        var heightDiff = 400
-        if (!clicked) {
-            heightDiff = -400
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            val options = ActivityOptionsCompat.makeSceneTransitionAnimation(
+                context as Activity,
+                v.news_item_img, ViewCompat.getTransitionName(v.news_item_img)!!
+            )
+
+            ActivityCompat.startActivity(context, i, options.toBundle())
         }
-        val valueAnimator = ValueAnimator.ofInt(v.measuredHeight, v.measuredHeight + heightDiff)
-
-//2
-        valueAnimator.addUpdateListener {
-            // 3
-            val value = it.animatedValue as Int
-            // 4
-            val layoutParams:ViewGroup.LayoutParams = v.layoutParams
-            layoutParams.height = value
-            v.layoutParams = layoutParams
-        }
-
-//5
-//        valueAnimator.interpolator = LinearInterpolator()
-        valueAnimator.duration = 300
-
-//6
-        valueAnimator.start()
+//
+//        clicked = !clicked
+//
+//        var heightDiff = 400
+//        if (!clicked) {
+//            heightDiff = -400
+//        }
+//        val valueAnimator = ValueAnimator.ofInt(v.measuredHeight, v.measuredHeight + heightDiff)
+//
+////2
+//        valueAnimator.addUpdateListener {
+//            // 3
+//            val value = it.animatedValue as Int
+//            // 4
+//            val layoutParams:ViewGroup.LayoutParams = v.layoutParams
+//            layoutParams.height = value
+//            v.layoutParams = layoutParams
+//        }
+//
+////5
+////        valueAnimator.interpolator = LinearInterpolator()
+//        valueAnimator.duration = 300
+//
+////6
+//        valueAnimator.start()
     }
     companion object {
         private val ARTICLE_KEY = "ARTICLE"

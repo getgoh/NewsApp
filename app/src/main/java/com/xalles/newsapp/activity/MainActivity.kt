@@ -2,11 +2,15 @@ package com.xalles.newsapp.activity
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.Window
 import androidx.recyclerview.widget.LinearLayoutManager
+import android.transition.Explode
+import android.transition.Slide
+import android.transition.TransitionInflater
 import java.net.URL
 import com.google.gson.Gson
-import com.xalles.newsap.models.ApiResponse
-import com.xalles.newsap.models.Article
+import com.xalles.newsapp.model.ApiResponse
+import com.xalles.newsapp.model.Article
 import com.xalles.newsapp.R
 import com.xalles.newsapp.adapter.NewsAdapter
 import kotlinx.android.synthetic.main.activity_main.*
@@ -18,7 +22,7 @@ import kotlinx.coroutines.launch
 
 class MainActivity : AppCompatActivity() {
 
-    private val apiKey = "cc1d2784c45a4db7b172c39e08b8ed40"
+    private val apiKey = ""
 
     private lateinit var adapter: NewsAdapter
     private lateinit var linearLayoutManager: LinearLayoutManager
@@ -32,6 +36,13 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        with(window) {
+            requestFeature(Window.FEATURE_CONTENT_TRANSITIONS)
+
+            sharedElementExitTransition = Slide()
+        }
+
         setContentView(R.layout.activity_main)
 
         initialize()
@@ -40,10 +51,11 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun initialize() {
+
         linearLayoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
         rv_news.layoutManager = linearLayoutManager
 
-        adapter = NewsAdapter(articleList)
+        adapter = NewsAdapter(articleList, this@MainActivity)
         rv_news.adapter = adapter
 
         swipeContainer.setOnRefreshListener {
